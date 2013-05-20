@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+   <extension
+         point="org.eclipse.ui.commands">
+      <command
+            categoryId="com.ensoftcorp.atlas.java.ui.commands.category"
+            id="com.ensoftcorp.atlas.java.example.commands.reverseCallGraph"
+            name="Reverse Call Graph">
+      </command>
+      <command
+            categoryId="com.ensoftcorp.atlas.java.ui.commands.category"
+            id="com.ensoftcorp.atlas.java.example.commands.neighbors"
+            name="Neighbors">
+      </command>
+      <command
+            categoryId="com.ensoftcorp.atlas.java.ui.commands.category"
+            id="com.ensoftcorp.atlas.java.example.commands.yourQuery"
+            name="Your Query Here">
+      </command>
+   </extension>
+   <extension
+         point="org.eclipse.ui.handlers">
+      <handler
+            class="com.ensoftcorp.atlas.java.example.handlers.ReverseCallGraphHandler"
+            commandId="com.ensoftcorp.atlas.java.example.commands.reverseCallGraph">
+      </handler>
+      <handler
+            class="com.ensoftcorp.atlas.java.example.handlers.NeighborsHandler"
+            commandId="com.ensoftcorp.atlas.java.example.commands.neighbors">
+      </handler>
+      <handler
+            class="com.ensoftcorp.atlas.java.example.handlers.YourHandler"
+            commandId="com.ensoftcorp.atlas.java.example.commands.yourQuery">
+      </handler>
+   </extension>
+   <extension
+         point="org.eclipse.ui.bindings">
+      <key
+            commandId="com.ensoftcorp.atlas.java.example.commands.yourQuery"
+            contextId="org.eclipse.ui.contexts.window"
+            schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
+            sequence="M1+4">
+      </key>
+   </extension>
+   <extension
+         point="org.eclipse.ui.menus">
+      <menuContribution
+            locationURI="menu:org.eclipse.ui.main.menu?after=additions">
+         <menu
+               label="Atlas Examples"
+               mnemonic="E"
+               id="com.ensoftcorp.atlas.java.example.menus.exampleMenu">
+            <command
+                  commandId="com.ensoftcorp.atlas.java.example.commands.reverseCallGraph"
+                  id="com.ensoftcorp.atlas.java.example.menus.reverseCallGraph"
+                  mnemonic="R">
+            </command>
+            <command
+                  commandId="com.ensoftcorp.atlas.java.example.commands.neighbors"
+                  id="com.ensoftcorp.atlas.java.example.menus.neighbors"
+                  mnemonic="N">
+            </command>
+            <command
+                  commandId="com.ensoftcorp.atlas.java.example.commands.yourQuery"
+                  id="com.ensoftcorp.atlas.java.example.menus.yourQuery"
+                  mnemonic="Y">
+            </command>
+         </menu>
+      </menuContribution>
+      <menuContribution
+            locationURI="toolbar:org.eclipse.ui.main.toolbar?after=additions">
+         <toolbar
+               id="com.ensoftcorp.atlas.java.example.toolbars.exampleToolbar">
+            <command
+                  commandId="com.ensoftcorp.atlas.java.example.commands.reverseCallGraph"
+                  icon="icons/sample.gif"
+                  id="com.ensoftcorp.atlas.java.example.toolbars.reverseCallGraph"
+                  tooltip="Reverse Call Graph">
+            </command>
+            <command
+                  commandId="com.ensoftcorp.atlas.java.example.commands.neighbors"
+                  icon="icons/sample.gif"
+                  id="com.ensoftcorp.atlas.java.example.toolbars.neighbors"
+                  tooltip="Neighbors">
+            </command>
+            <command
+                  commandId="com.ensoftcorp.atlas.java.example.commands.yourQuery"
+                  icon="icons/sample.gif"
+                  id="com.ensoftcorp.atlas.java.example.toolbars.yourQuery"
+                  tooltip="Your Query Here">
+            </command>
+         </toolbar>
+      </menuContribution>
+   </extension>
+
+</plugin>
