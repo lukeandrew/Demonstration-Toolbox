@@ -12,6 +12,9 @@ import java.util.Map;
 
 import com.ensoftcorp.atlas.java.core.db.graph.Graph;
 import com.ensoftcorp.atlas.java.core.db.graph.GraphElement;
+import com.ensoftcorp.atlas.java.core.db.graph.operation.InducedGraph;
+import com.ensoftcorp.atlas.java.core.db.set.AtlasHashSet;
+import com.ensoftcorp.atlas.java.core.db.set.EmptyAtlasSet;
 import com.ensoftcorp.atlas.java.core.highlight.Highlighter;
 import com.ensoftcorp.atlas.java.core.query.Q;
 
@@ -99,11 +102,13 @@ public class Artist {
 			
 			boolean edge = universe().eval().edges().contains(ge);
 			boolean node = universe().eval().nodes().contains(ge);
+			AtlasHashSet<GraphElement> geSet = new AtlasHashSet<GraphElement>();
+			geSet.add(ge);
 			if(node){
-				h.highlightNodes(toQ(toGraph(ge)), color);
+				h.highlightNodes(toQ(new InducedGraph(geSet, EmptyAtlasSet.<GraphElement>instance())), color);
 			}
 			if(edge){
-				h.highlightEdges(toQ(toGraph(ge)), color);
+				h.highlightEdges(toQ(new InducedGraph(universe().eval().nodes(),geSet)), color);
 			}
 		}
 		return h;

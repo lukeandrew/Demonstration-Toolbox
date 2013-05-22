@@ -1,3 +1,4 @@
+package com.ensoftcorp.example.synchronization;
 import java.util.LinkedList;
 import java.util.List;
 

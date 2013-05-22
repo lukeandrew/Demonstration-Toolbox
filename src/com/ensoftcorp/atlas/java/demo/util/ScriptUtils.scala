@@ -19,6 +19,8 @@ import java.util.HashSet
 import com.ensoftcorp.atlas.java.core.db.graph.Graph
 import com.ensoftcorp.atlas.java.core.db.graph.operation.DifferenceGraph
 import com.ensoftcorp.atlas.java.core.db.set.DifferenceSet
+import java.util.HashMap
+import scala.util.matching.Regex
 
 /**
  * Broadly-useful queries for writing other scripts or using directly on the interpreter.
@@ -138,5 +140,47 @@ object ScriptUtils {
     }
 
     toQ(new InducedGraph(result, EmptyAtlasSet.instance[GraphElement]))
+  }
+  
+  private var nameMap = null.asInstanceOf[HashMap[String, AtlasSet[GraphElement]]]
+  private def addToMap(key:String, value:GraphElement, map:HashMap[String, AtlasSet[GraphElement]]) = {
+    var set = map.get(key)
+    if(set == null){
+      set = new AtlasHashSet[GraphElement]
+      map.put(key, set)
+    }
+    set.add(value)
+  }
+  
+  def nodesMatchingRegex(regex:String):Q = {
+    // Initialize the map of names if not yet initialized
+    if(nameMap == null){
+    	nameMap = new HashMap[String, AtlasSet[GraphElement]]
+    	var ge = 0
+    	for(ge <- universe.eval.nodes){
+    	  addToMap(ge.attr.get(Node.NAME).asInstanceOf[String], ge, nameMap)
+    	}
+    }
+    
+    // The result we will build then return
+    var result = empty
+    
+    // Go through the map of names and add all nodes for which the regex is a full match
+    var str = ""
+    for(str <- nameMap.keySet){
+      if(str matches regex){
+        result = result union toQ(new InducedGraph(nameMap.get(str), EmptyAtlasSet.instance[GraphElement]))
+      }
+    }
+    
+    result
+  }
+  
+  /**
+   * Removes *only edges* from the context which are at a CF block level of granularity
+   */
+  def differenceEdges(context:Q, toRemove:Q):Q = {
+    var nonPerCFEdges = new DifferenceSet(context.eval.edges, toRemove.eval.edges)
+    toQ(new InducedGraph(context.eval.nodes, nonPerCFEdges))
   }
 }

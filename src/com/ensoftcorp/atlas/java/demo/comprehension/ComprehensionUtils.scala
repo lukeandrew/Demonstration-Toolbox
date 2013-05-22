@@ -24,6 +24,7 @@ import java.awt.Color
 import com.ensoftcorp.atlas.java.demo.util.Artist;
 import com.ensoftcorp.atlas.java.demo.util.DisplayItem;
 import com.ensoftcorp.atlas.java.demo.util.Artist.PaintMode;
+import com.ensoftcorp.atlas.java.demo.util.ScriptUtils._;
 import com.ensoftcorp.atlas.java.core.db.graph.EdgeGraph
 
 /**
@@ -39,7 +40,7 @@ object ComprehensionUtils {
    */
   private def bidirectional(start:Q, edgeKinds:String*):DisplayItem = {
     var context = universe.edgesTaggedWithAny(edgeKinds:_*)
-    context = removeCFGranularity(context)
+    context = differenceEdges(context, context.edgesTaggedWithAny(Edge.PER_CONTROL_FLOW))
     
     var ancestors = context.reverse(start)
     var decendents = context.forward(start)
@@ -50,15 +51,6 @@ object ComprehensionUtils {
     artist.addTint(decendents difference start, Color.BLUE, PaintMode.NODES)
 
     new DisplayItem(ancestors union decendents, artist.getHighlighter)
-  }
-  
-  /**
-   * Removes *only edges* from the context which are at a CF block level of granularity
-   */
-  private def removeCFGranularity(context:Q):Q = {
-    var nonPerCFEdges = new DifferenceSet(context.eval.edges, 
-                                          context.edgesTaggedWithAny(Edge.PER_CONTROL_FLOW).eval.edges)
-    toQ(new InducedGraph(context.eval.nodes, nonPerCFEdges))
   }
   
   /**
@@ -102,7 +94,7 @@ object ComprehensionUtils {
   def interactions(first:Q, second:Q, edgeTypes:String*):DisplayItem = {
     // Get all edges of the allowed types and with only PER_METHOD granularity
     var edgeContext = universe.edgesTaggedWithAny(edgeTypes:_*) 
-    edgeContext = removeCFGranularity(edgeContext)
+    edgeContext = differenceEdges(edgeContext, edgeContext.edgesTaggedWithAny(Edge.PER_CONTROL_FLOW))
     
     // Narrow the edge context to only the edges one step between the two subgraphs
     var firstToSecond = edgeContext.forwardStep(first) intersection edgeContext.reverseStep(second)
