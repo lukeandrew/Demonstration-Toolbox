@@ -17,4 +17,5 @@ import com.ensoftcorp.atlas.java.core.db.Accuracy._
 import com.ensoftcorp.atlas.java.core.db.graph.Graph
 
 import com.ensoftcorp.atlas.java.demo.comprehension.ComprehensionUtils._
+import com.ensoftcorp.atlas.java.demo.util._
 import com.ensoftcorp.atlas.java.demo.comprehension.DisplayItem

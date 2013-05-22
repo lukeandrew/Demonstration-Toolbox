@@ -1,7 +1,7 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Atlas/Java script example
-Bundle-SymbolicName: Demo_Toolbox;singleton:=true
+Bundle-SymbolicName: Demonstration-Toolbox;singleton:=true
 Bundle-Version: 0.13.0.qualifier
 Bundle-Vendor: EnSoft Corp. (www.ensoftcorp.com)
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
