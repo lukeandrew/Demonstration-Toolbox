@@ -20,7 +20,10 @@ import com.ensoftcorp.atlas.java.core.db.graph.operation.DifferenceGraph
 import com.ensoftcorp.atlas.java.core.db.set.DifferenceSet
 import com.ensoftcorp.atlas.java.core.highlight.Highlighter
 import java.awt.Color
-import com.ensoftcorp.atlas.java.demo.comprehension.Artist.PaintMode
+
+import com.ensoftcorp.atlas.java.demo.util.Artist;
+import com.ensoftcorp.atlas.java.demo.util.DisplayItem;
+import com.ensoftcorp.atlas.java.demo.util.Artist.PaintMode;
 import com.ensoftcorp.atlas.java.core.db.graph.EdgeGraph
 
 /**

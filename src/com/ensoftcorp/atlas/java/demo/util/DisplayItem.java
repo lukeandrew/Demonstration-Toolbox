@@ -1,4 +1,4 @@
-package com.ensoftcorp.atlas.java.demo.comprehension;
+package com.ensoftcorp.atlas.java.demo.util;
 
 import com.ensoftcorp.atlas.java.core.highlight.Highlighter;
 import com.ensoftcorp.atlas.java.core.query.Q;
