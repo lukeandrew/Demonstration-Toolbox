@@ -183,4 +183,16 @@ object ScriptUtils {
     var nonPerCFEdges = new DifferenceSet(context.eval.edges, toRemove.eval.edges)
     toQ(new InducedGraph(context.eval.nodes, nonPerCFEdges))
   }
+  
+  /**
+   * Given a node set and edge set, returns a graph with the node set included
+   * and only those edges which have both endpoints in the node set.
+   * 
+   * @param nodeSet Q containing nodes 
+   * @param edgeSet Q containing edges
+   * @return Q induced graph
+   */
+  def inducedGraph(nodeSet: Q, edgeSet: Q):Q = {
+    toQ(new InducedGraph(nodeSet.eval.nodes, edgeSet.eval.edges))
+  }
 }

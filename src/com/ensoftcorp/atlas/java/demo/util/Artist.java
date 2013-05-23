@@ -1,6 +1,5 @@
 package com.ensoftcorp.atlas.java.demo.util;
 
-import static com.ensoftcorp.atlas.java.core.script.Common.toGraph;
 import static com.ensoftcorp.atlas.java.core.script.Common.toQ;
 import static com.ensoftcorp.atlas.java.core.script.Common.universe;
 
@@ -43,7 +42,7 @@ public class Artist {
 	 * @param color The color to add
 	 * @param mode Whether to paint nodes, edges, or both
 	 */
-	public void addTint(Q addTo, Color color, PaintMode mode){
+	public void addColor(Q addTo, Color color, PaintMode mode){
 		Graph addToG = addTo.eval();
 		
 		if(mode.equals(PaintMode.NODES) || mode.equals(PaintMode.BOTH)){
@@ -96,8 +95,6 @@ public class Artist {
 		Highlighter h = new Highlighter();
 				
 		for(GraphElement ge : canvas.keySet()){
-			// TODO get the distance of this element from the origin
-			// Calculate the alpha for this element.
 			Color color = colorForElement(ge);
 			
 			boolean edge = universe().eval().edges().contains(ge);

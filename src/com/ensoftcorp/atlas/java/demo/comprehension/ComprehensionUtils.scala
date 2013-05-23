@@ -46,9 +46,9 @@ object ComprehensionUtils {
     var decendents = context.forward(start)
     
     var artist = new Artist
-    artist.addTint(start, Color.YELLOW, PaintMode.NODES)
-    artist.addTint(ancestors difference start, Color.RED, PaintMode.NODES)
-    artist.addTint(decendents difference start, Color.BLUE, PaintMode.NODES)
+    artist.addColor(start, Color.YELLOW, PaintMode.NODES)
+    artist.addColor(ancestors difference start, Color.RED, PaintMode.NODES)
+    artist.addColor(decendents difference start, Color.BLUE, PaintMode.NODES)
 
     new DisplayItem(ancestors union decendents, artist.getHighlighter)
   }
@@ -102,10 +102,10 @@ object ComprehensionUtils {
     edgeContext = (firstToSecond union secondToFirst).retainEdges
     
     var artist = new Artist
-    artist.addTint(first, Color.RED, PaintMode.NODES)
-    artist.addTint(firstToSecond, Color.RED, PaintMode.EDGES)
-    artist.addTint(second, Color.BLUE, PaintMode.NODES)
-    artist.addTint(secondToFirst, Color.BLUE, PaintMode.EDGES)
+    artist.addColor(first, Color.RED, PaintMode.NODES)
+    artist.addColor(firstToSecond, Color.RED, PaintMode.EDGES)
+    artist.addColor(second, Color.BLUE, PaintMode.NODES)
+    artist.addColor(secondToFirst, Color.BLUE, PaintMode.EDGES)
 
     new DisplayItem(edgeContext, artist.getHighlighter)
   }

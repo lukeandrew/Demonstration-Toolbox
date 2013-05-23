@@ -64,11 +64,11 @@ object RaceCheck {
     
     // The tokens themselves will be yellow, good accesses blue, and bad accesses red
     var artist = new Artist
-    artist.addTint(sharedTokens, Color.YELLOW, PaintMode.NODES)
-    artist.addTint(badAccesses difference sharedTokens, Color.RED, PaintMode.NODES)
-    artist.addTint(badAccesses, Color.RED, PaintMode.EDGES)
-    artist.addTint(goodAccesses difference sharedTokens, Color.BLUE, PaintMode.NODES)
-    artist.addTint(goodAccesses, Color.BLUE, PaintMode.EDGES)
+    artist.addColor(sharedTokens, Color.YELLOW, PaintMode.NODES)
+    artist.addColor(badAccesses difference sharedTokens, Color.RED, PaintMode.NODES)
+    artist.addColor(badAccesses, Color.RED, PaintMode.EDGES)
+    artist.addColor(goodAccesses difference sharedTokens, Color.BLUE, PaintMode.NODES)
+    artist.addColor(goodAccesses, Color.BLUE, PaintMode.EDGES)
     
     new DisplayItem(sharedTokens union goodAccesses union badAccesses, artist.getHighlighter())
   }
