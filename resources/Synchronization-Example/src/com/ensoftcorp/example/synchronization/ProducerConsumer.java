@@ -3,7 +3,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 
-public class Synchronization {
+public class ProducerConsumer {
 	static List<Integer> buffer = new LinkedList<Integer>();
 	static Boolean productionDone = false;
 	
@@ -18,9 +18,9 @@ public class Synchronization {
 		@Override
 		public void run() {
 			for(int i=0; i<10000; i++){
-				synchronized(buffer){
+				//synchronized(buffer){
 					buffer.add(i);
-				}
+				//}
 			}
 			productionDone = true;		
 		}

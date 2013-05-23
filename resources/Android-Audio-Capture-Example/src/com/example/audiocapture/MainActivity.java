@@ -14,7 +14,7 @@ public class MainActivity extends Activity {
 		MediaRecorder mr = new MediaRecorder();
 		
 		mr.setAudioSource(MediaRecorder.AudioSource.MIC);
-		mr.setOutputFormat(MediaRecorder.OutputFormat.AAC_ADTS);
+		//mr.setOutputFormat(MediaRecorder.OutputFormat.AAC_ADTS);
 		mr.setOutputFile("some/file");
 		mr.setAudioEncoder(MediaRecorder.AudioEncoder.AAC);
 		try {
