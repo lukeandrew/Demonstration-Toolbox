@@ -47,7 +47,7 @@ object ComprehensionUtils {
     
     var artist = new Artist
     artist.addColor(start, Color.YELLOW, PaintMode.NODES)
-    artist.addColor(ancestors difference start, Color.RED, PaintMode.NODES)
+    artist.addColor(ancestors difference start, Color.GREEN, PaintMode.NODES)
     artist.addColor(decendents difference start, Color.BLUE, PaintMode.NODES)
 
     new DisplayItem(ancestors union decendents, artist.getHighlighter)

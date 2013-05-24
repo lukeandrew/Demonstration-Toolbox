@@ -37,6 +37,8 @@ object RaceCheck {
     
     // Everywhere a read or write to the shared token occurs
     var accessors = stepTo(rwContext, sharedTokens) union stepFrom(rwContext, sharedTokens)
+    // Ignore accesses by initializer blocks, since these write to fields when defining them
+    accessors = accessors difference declarations(methods("<init>") union methods("<clinit>"))
     var synchronizeBlocks = universe.nodesTaggedWithAny(Node.SYNCHRONIZED)
     // Special logic to ignore "CF blocks" which represent the argument of synchronization statements. Hacktacular!
     var decBySynchronized = decContext.forwardStep(synchronizeBlocks)
