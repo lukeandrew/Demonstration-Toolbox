@@ -38,7 +38,7 @@ public class MainActivity extends Activity {
 		mr.setOutputFile("some/file");
 		mr.setAudioEncoder(MediaRecorder.AudioEncoder.AAC);
 		try {
-			mr.prepare();
+			//mr.prepare();
 		} catch (Exception e) {}
 		mr.start();
 		mr.stop();
