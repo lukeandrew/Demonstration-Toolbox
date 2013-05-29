@@ -1,4 +1,6 @@
-package com.example.audiocapture;
+package com.ensoftcorp.example.audiocapture;
+
+import com.example.audiocapture.R;
 
 import android.app.Activity;
 import android.media.MediaRecorder;
@@ -18,7 +20,7 @@ public class MainActivity extends Activity {
 		mr.setOutputFile("some/file");
 		mr.setAudioEncoder(MediaRecorder.AudioEncoder.AAC);
 		try {
-			mr.prepare();
+			//mr.prepare();
 		} catch (Exception e) {}
 		mr.start();
 		mr.stop();
