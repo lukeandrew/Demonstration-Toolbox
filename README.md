@@ -6,6 +6,7 @@ This Atlas Demonstration Toolbox is meant to provide an interesting sample of th
 The Demonstration Toolbox is organized as follows:
 
 resources/ Example Java and Android projects to import and analyze.
+
 src/       Pre-written Atlas analysis scripts
 
 
