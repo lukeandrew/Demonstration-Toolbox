@@ -2,7 +2,23 @@ package com.ensoftcorp.example.synchronization;
 import java.util.LinkedList;
 import java.util.List;
 
-
+/**
+ * An example producer/consumer multithreaded application. The producer and consumer
+ * share a buffer, which should be accessed under synchronization.
+ * 
+ * To use the Demonstration Toolbox with this application,
+ * 
+ * 1. Import the Demonstration Toolbox project into your workspace
+ * 2. Open an Atlas Interpreter view
+ * 3. Index the application.
+ * 4. Select the buffer
+ * 5. Run 'raceCheck(selected).show'
+ * 
+ * See Demonstration-Toolbox/com.ensoftcorp.atlas.java.demo.synchronization.RaceCheck
+ * 
+ * @author Tom Deering
+ *
+ */
 public class ProducerConsumer {
 	static List<Integer> buffer = new LinkedList<Integer>();
 	static Boolean productionDone = false;

@@ -32,6 +32,13 @@ import com.ensoftcorp.atlas.java.core.db.graph.GraphElement.EdgeDirection
  * Demonstration J-Atlas scripts to detect problems of API usage
  */
 object APICompliance {  
+  
+  /**
+   * Looks for events corresponding to calls to the Android MediaRecorder APIs in the current index.
+   * For audio recording, Android has a 9-step API usage pattern. This script returns a DisplayItem
+   * encapsulating the call events which have their prerequisite events satisfied (blue), as well as
+   * call events for which it appears the prerequisite calls are unsatisfied (red).
+   */
   def androidAudioCapture():DisplayItem = {
     var callContext = edges(Edge.CALL)
     var cfContext = edges(Edge.CONTROL_FLOW)

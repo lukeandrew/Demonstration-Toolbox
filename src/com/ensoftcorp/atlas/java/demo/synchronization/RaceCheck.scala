@@ -30,6 +30,11 @@ import com.ensoftcorp.atlas.java.demo.util.ScriptUtils._
  * Demonstration J-Atlas scripts to help look for safe, synchronized access of objects
  */
 object RaceCheck {  
+  
+  /**
+   * Given a Q which holds references to data structures which should be read or written only
+   * when synchronized, returns a DisplayItem encapsulating safe accesses (blue) and unsafe accesses (red).
+   */
   def raceCheck(sharedTokens:Q):DisplayItem = {
     var decContext = edges(Edge.DECLARES)
     var rwContext = edges(Edge.READ, Edge.WRITE)
