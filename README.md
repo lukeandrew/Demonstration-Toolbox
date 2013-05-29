@@ -5,9 +5,9 @@ This Atlas Demonstration Toolbox presents a few interesting use cases of Atlas, 
 
 The Demonstration Toolbox is organized as follows:
 
-**resources/** Example Java and Android projects to import and analyze.
+**app/** Example Java and Android projects to import and analyze.
 
-**src/**       Pre-written Atlas analysis scripts
+**src/** Pre-written Atlas analysis scripts
 
 
 **EXAMPLE ANALYSIS SCRIPTS**
