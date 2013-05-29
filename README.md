@@ -1,7 +1,7 @@
 Demonstration-Toolbox
 =====================
 
-This Atlas Demonstration Toolbox presents a few interesting use cases of Atlas, a software analysis framework from EnSoft Corp. To use the Demonstration Toolbox, you must have a copy of Eclipse with Atlas installed. See http://www.ensoftcorp.com/atlas/.
+This Atlas Demonstration Toolbox presents a few interesting use cases of Atlas, a software analysis framework from EnSoft Corp. To use the Demonstration Toolbox, you must have a copy of Eclipse with Atlas installed. See http://www.ensoftcorp.com/atlas_request/.
 
 The Demonstration Toolbox is organized as follows:
 
