@@ -31,5 +31,5 @@ The analysis use cases presented by the Demonstration Toolbox are only the tip o
 
 *http://www.ensoftcorp.com/atlas/*
 
-*corporate@ensoftcorp.com*
+*contactus@ensoftcorp.com*
 
