@@ -1,4 +1,8 @@
 package com.ensoftcorp.example.synchronization;
+
+import android.os.Bundle;
+import android.app.Activity;
+import android.view.Menu;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -19,11 +23,25 @@ import java.util.List;
  * @author Tom Deering
  *
  */
-public class ProducerConsumer {
+public class ProducerConsumer extends Activity {
 	static List<Integer> buffer = new LinkedList<Integer>();
 	static Boolean productionDone = false;
 	
-	public static void main(String[] args){
+	@Override
+	protected void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		setContentView(R.layout.activity_producer_consumer);
+		start();
+	}
+
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+		// Inflate the menu; this adds items to the action bar if it is present.
+		getMenuInflater().inflate(R.menu.producer_consumer, menu);
+		return true;
+	}
+	
+	public static void start(){
 		Thread producer = new Thread(new Producer());
 		Thread consumer = new Thread(new Consumer());
 		producer.start();
