@@ -1,6 +1,8 @@
 Demonstration-Toolbox
 =====================
 
+**For full walkthroughs and documentation of the examples, please see doc/Demo Documentation.**
+
 This Atlas Demonstration Toolbox presents a few interesting use cases of Atlas, a software analysis framework from EnSoft Corp. To use the Demonstration Toolbox, you must have a copy of Eclipse with Atlas installed. See http://www.ensoftcorp.com/atlas_request/.
 
 The Demonstration Toolbox is organized as follows:
@@ -23,7 +25,6 @@ Atlas scripts which detect unsynchronized read/write access of specified shared 
 **src/com.ensoftcorp.atlas.java.demo.apicompliance.APICompliance**
 
 Atlas scripts which detect violations of expected API usage patterns. In particular, the provided script checks for violations of the expected pattern of Android's MediaRecorder API for recording audio. Intended for demonstration with Android-Audio-Recording-Example, a simple Android app which records audio. 
-
 
 **ADDITIONAL INFORMATION**
 
