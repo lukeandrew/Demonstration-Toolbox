@@ -75,13 +75,6 @@ object ComprehensionUtils {
   }
   
   /**
-   * Returns the bidirectional declarations from the given nodes.
-   */
-  def declarations(start:Q):DisplayItem = {
-    bidirectional(start, Edge.DECLARES)
-  }
-  
-  /**
    * Returns the bidirectional override graph from the given methods.
    */
   def overrides(start:Q):DisplayItem = {
