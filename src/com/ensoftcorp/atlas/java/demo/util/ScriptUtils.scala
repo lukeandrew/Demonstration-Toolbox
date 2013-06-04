@@ -31,14 +31,14 @@ object ScriptUtils {
    *
    * NOTE: These nodes are NOT declared by anything. They are outside of any project.
    */
-  val arrayTypes = universe.selectNode(Node.IS_ARRAYTYPE)
+  val arrayTypes = universe.nodesTaggedWithAny(Node.IS_ARRAYTYPE)
 
   /**
    * Types which represent language primitive types
    *
    * NOTE: These nodes are NOT declared by anything. They are outside of any project.
    */
-  val primitiveTypes = universe.selectNode(Node.IS_PRIMITIVE)
+  val primitiveTypes = universe.nodesTaggedWithAny(Node.IS_PRIMITIVE)
 
   /**
    * Summary invoke nodes, representing invocations on methods.
