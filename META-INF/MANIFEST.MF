@@ -10,4 +10,7 @@ Require-Bundle: org.eclipse.ui;bundle-version="3.7.0",
  com.ensoftcorp.atlas.java.core;bundle-version="0.13.1",
  com.ensoftcorp.atlas.java.ui;bundle-version="0.13.1",
  org.scala-ide.scala.library;bundle-version="[2.0.0,3.0.0)",
- com.ensoftcorp.atlas.java.interpreter;bundle-version="0.13.1"
+ com.ensoftcorp.atlas.java.interpreter;bundle-version="0.13.1",
+ org.eclipse.core.resources
+Import-Package: org.eclipse.jdt.core,
+ org.eclipse.jdt.internal.core
