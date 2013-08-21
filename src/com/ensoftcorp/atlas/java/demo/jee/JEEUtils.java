@@ -15,16 +15,19 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
+
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IWorkspace;
 import org.eclipse.core.resources.ResourcesPlugin;
-import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
-import org.eclipse.jdt.core.IJavaProject;
-import org.eclipse.jdt.core.IPackageFragmentRoot;
-import org.eclipse.jdt.core.JavaCore;
+import org.w3c.dom.Document;
+import org.w3c.dom.NodeList;
+import org.xml.sax.SAXException;
 
 import com.ensoftcorp.atlas.java.core.db.graph.GraphElement;
 import com.ensoftcorp.atlas.java.core.db.view.View;
@@ -115,6 +118,43 @@ public class JEEUtils {
 		return toQ(v);
 	}
 	
+	public static Map<String, String> getComponentTagMapping(Q projects){
+		Map<String, String> componentToTag = new HashMap<String, String>();
+		
+		final String COMPONENT_TYPE = "component-type";
+		final String TAG_NAME = "tag-name";
+		final String COMPONENT = "component";
+		
+		for(GraphElement project : projects.nodesTaggedWithAny(Node.PROJECT).eval().nodes()){
+			String projectName = (String) project.attr().get(Node.NAME);
+			
+			// Get the component nodes from the taglib XML files
+			List<File> taglibFiles = projectFilesMatchingExtension(projectName, "xml","XML");
+			List<org.w3c.dom.Node> componentTypeNodes = XMLNodesByName(taglibFiles, COMPONENT_TYPE);
+			
+			for(org.w3c.dom.Node componentType : componentTypeNodes){
+				try{
+					org.w3c.dom.Node component = componentType.getParentNode();
+					org.w3c.dom.Node tag = component.getParentNode();
+					NodeList tagChildren = tag.getChildNodes();
+					for(int i = 0; i < tagChildren.getLength(); i++){
+						org.w3c.dom.Node tagName = tagChildren.item(i);
+						
+						if(tagName.getNodeType() == org.w3c.dom.Node.ELEMENT_NODE && 
+						   TAG_NAME.equalsIgnoreCase(tagName.getNodeName())){
+							String componentTypeValue = componentType.getTextContent();
+							String tagNameValue = tagName.getTextContent();
+							componentToTag.put(componentTypeValue, tagNameValue);
+							break;
+						}
+					}
+				} catch(Exception e){}
+			}
+		}
+		
+		return componentToTag;
+	}
+	
 	private static IFile fileToIFile(File file){
 		IWorkspace workspace = ResourcesPlugin.getWorkspace();    
 		IPath location = Path.fromOSString(file.getAbsolutePath()); 
@@ -159,6 +199,30 @@ public class JEEUtils {
 		}
 		
 		return lines;
+	}
+
+	private static List<org.w3c.dom.Node> XMLNodesByName(List<File> xmlFiles, String name){
+		List<org.w3c.dom.Node> nodeList = new LinkedList<org.w3c.dom.Node>();
+		
+		DocumentBuilderFactory docBuilderFactory = DocumentBuilderFactory.newInstance();
+		DocumentBuilder docBuilder;
+		try {
+			docBuilder = docBuilderFactory.newDocumentBuilder();
+			for(File f : xmlFiles){
+				try {
+					Document document = docBuilder.parse(f);
+					NodeList nl = document.getElementsByTagName(name);
+					for(int i=0; i < nl.getLength(); i++) nodeList.add(nl.item(i));
+				} 
+				catch (SAXException e) {} 
+				catch (IOException e) {}
+			}
+		} catch (ParserConfigurationException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		return nodeList;
 	}
 	
 	private static List<File> projectFilesMatchingExtension(String projectName, String... fileExtensions){
