@@ -1,14 +1,13 @@
 package com.ensoftcorp.atlas.java.demo.jee.selection;
 
-import static com.ensoftcorp.atlas.java.core.script.Common.*;
+import static com.ensoftcorp.atlas.java.core.script.Common.edges;
+import static com.ensoftcorp.atlas.java.core.script.Common.empty;
 import static com.ensoftcorp.atlas.java.core.script.Common.stepFrom;
 import static com.ensoftcorp.atlas.java.core.script.Common.typeSelect;
 import static com.ensoftcorp.atlas.java.demo.jee.JEEUtils.getComponentTagMapping;
 
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Map;
-import java.util.Set;
 import java.util.regex.Pattern;
 
 import com.ensoftcorp.atlas.java.core.db.graph.GraphElement;
@@ -20,13 +19,7 @@ import com.ensoftcorp.atlas.java.demo.jee.JEEUtils;
 import com.ensoftcorp.atlas.java.ui.scripts.selections.SelectionDetailScript;
 
 /**
- * Produces a helpful, persistence-relevant graph in response to selections of:
- * 
- * > Persistence annotation types
- * > Classes annotated with @Entitity
- * > Persistent fields of entity classes
- * > Object references annotated with @PersistenceUnit or @PersistenceContext
- * > Persistence API types
+ * Produces graphs relevant to JEE Faces Renderers and Components.
  * 
  * @author tom
  *
@@ -74,6 +67,7 @@ public class JEERenderComponents implements SelectionDetailScript{
 		
 		// Get the types for the selected components and renderers
 		// FIXME: Replace hard-coding with Atlas queries after parameterized annotation representation is updated.
+		@SuppressWarnings("serial")
 		Map<GraphElement, String> classToType = new HashMap<GraphElement, String>(){{
 			put(typeSelect("javaeetutorial.dukesbookstore.renderers","AreaRenderer").eval().nodes().getFirst(), "DemoArea");
 			put(typeSelect("javaeetutorial.dukesbookstore.renderers","MapRenderer").eval().nodes().getFirst(), "DemoMap");

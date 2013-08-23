@@ -1,17 +1,17 @@
 package com.ensoftcorp.atlas.java.demo.jee.selection;
 
-import static com.ensoftcorp.atlas.java.core.script.Common.*;
+import static com.ensoftcorp.atlas.java.core.script.Common.edges;
+import static com.ensoftcorp.atlas.java.core.script.Common.empty;
+import static com.ensoftcorp.atlas.java.core.script.Common.stepFrom;
+import static com.ensoftcorp.atlas.java.core.script.Common.toGraph;
+import static com.ensoftcorp.atlas.java.core.script.Common.toQ;
 
-import java.util.HashSet;
-import java.util.Set;
 import java.util.regex.Pattern;
 
-import com.ensoftcorp.atlas.java.core.db.graph.Address;
 import com.ensoftcorp.atlas.java.core.db.graph.GraphElement;
 import com.ensoftcorp.atlas.java.core.query.Attr.Edge;
 import com.ensoftcorp.atlas.java.core.query.Attr.Node;
 import com.ensoftcorp.atlas.java.core.query.Q;
-import com.ensoftcorp.atlas.java.core.script.Common;
 import com.ensoftcorp.atlas.java.core.script.CommonQueries;
 import com.ensoftcorp.atlas.java.core.script.CommonQueries.TraversalDirection;
 import com.ensoftcorp.atlas.java.core.script.StyledResult;
@@ -19,13 +19,7 @@ import com.ensoftcorp.atlas.java.demo.jee.JEEUtils;
 import com.ensoftcorp.atlas.java.ui.scripts.selections.SelectionDetailScript;
 
 /**
- * Produces a helpful, persistence-relevant graph in response to selections of:
- * 
- * > Persistence annotation types
- * > Classes annotated with @Entitity
- * > Persistent fields of entity classes
- * > Object references annotated with @PersistenceUnit or @PersistenceContext
- * > Persistence API types
+ * Produces graphs relevant to JEE Enterprise Beans.
  * 
  * @author tom
  *

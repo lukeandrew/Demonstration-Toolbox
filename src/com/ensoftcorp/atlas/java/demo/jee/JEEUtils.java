@@ -123,7 +123,6 @@ public class JEEUtils {
 		
 		final String COMPONENT_TYPE = "component-type";
 		final String TAG_NAME = "tag-name";
-		final String COMPONENT = "component";
 		
 		for(GraphElement project : projects.nodesTaggedWithAny(Node.PROJECT).eval().nodes()){
 			String projectName = (String) project.attr().get(Node.NAME);

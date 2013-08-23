@@ -39,8 +39,8 @@ object APICompliance {
    * encapsulating the call events which have their prerequisite events satisfied (blue), as well as
    * call events for which it appears the prerequisite calls are unsatisfied (red).
    */
-  def androidAudioCapture():DisplayItem = {
-    var callContext = edges(Edge.CALL)
+  def androidAudioCapture(toCheck:Q = universe):DisplayItem = {
+    var callContext = edges(Edge.CALL).forwardStep(toCheck).reverseStep(toCheck);
     var cfContext = edges(Edge.CONTROL_FLOW)
     
     // Grab the relevant API methods

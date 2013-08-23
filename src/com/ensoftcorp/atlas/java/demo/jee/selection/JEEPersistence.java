@@ -23,13 +23,7 @@ import com.ensoftcorp.atlas.java.core.script.StyledResult;
 import com.ensoftcorp.atlas.java.ui.scripts.selections.SelectionDetailScript;
 
 /**
- * Produces a helpful, persistence-relevant graph in response to selections of:
- * 
- * > Persistence annotation types
- * > Classes annotated with @Entitity
- * > Persistent fields of entity classes
- * > Object references annotated with @PersistenceUnit or @PersistenceContext
- * > Persistence API types
+ * Produces graphs relevant to JEE Persistence.
  * 
  * @author tom
  *
