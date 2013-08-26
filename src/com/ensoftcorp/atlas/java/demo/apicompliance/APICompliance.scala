@@ -1,32 +1,20 @@
 package com.ensoftcorp.atlas.java.demo.apicompliance
 
-import com.ensoftcorp.atlas.java.core.query.Q
-import java.lang.Boolean
+import java.awt.Color
 import scala.collection.JavaConversions.iterableAsScalaIterable
 import com.ensoftcorp.atlas.java.core.db.Accuracy.EXACT
 import com.ensoftcorp.atlas.java.core.db.Trinary.FALSE
-import com.ensoftcorp.atlas.java.core.db.graph.operation.InducedGraph
-import com.ensoftcorp.atlas.java.core.query.Attr.Edge
-import com.ensoftcorp.atlas.java.core.query.Attr.Node
 import com.ensoftcorp.atlas.java.core.query.Attr
+import com.ensoftcorp.atlas.java.core.query.Attr.Edge
+import com.ensoftcorp.atlas.java.core.query.Q
 import com.ensoftcorp.atlas.java.core.query.Q
 import com.ensoftcorp.atlas.java.core.script.Common._
 import com.ensoftcorp.atlas.java.core.script.Common
-import com.ensoftcorp.atlas.java.core.db.graph.GraphElement
-import com.ensoftcorp.atlas.java.core.db.set.AtlasHashSet
-import com.ensoftcorp.atlas.java.core.db.set.EmptyAtlasSet
-import com.ensoftcorp.atlas.java.core.db.set.AtlasSet
-import java.util.HashSet
-import com.ensoftcorp.atlas.java.core.db.graph.Graph
-import com.ensoftcorp.atlas.java.core.db.graph.operation.DifferenceGraph
-import com.ensoftcorp.atlas.java.core.db.set.DifferenceSet
-import java.util.HashMap
-import com.ensoftcorp.atlas.java.demo.util.DisplayItem
 import com.ensoftcorp.atlas.java.demo.util.Artist
-import java.awt.Color
 import com.ensoftcorp.atlas.java.demo.util.Artist.PaintMode
+import com.ensoftcorp.atlas.java.demo.util.DisplayItem
 import com.ensoftcorp.atlas.java.demo.util.ScriptUtils._
-import com.ensoftcorp.atlas.java.core.db.graph.GraphElement.EdgeDirection
+import com.ensoftcorp.atlas.java.core.db.graph.GraphElement
 
 /**
  * Demonstration J-Atlas scripts to detect problems of API usage
@@ -61,7 +49,7 @@ object APICompliance {
         setAudioEncoder, prepare, start, stop, release)
         
     // Grab the program's control flow graph 
-    var cfGraph = inducedGraph(app.nodesTaggedWithAny(Node.CONTROL_FLOW), cfContext)
+    var cfGraph = inducedGraph(app.nodesTaggedWithAny(Attr.Node.CONTROL_FLOW), cfContext)
     
     // Find calls from the CF graph to the API methods
     var apiCalls = callContext.forwardStep(cfGraph) intersection callContext.reverseStep(apis)
@@ -109,8 +97,8 @@ object APICompliance {
     var ge = 0
     for(ge <- cg.eval.edges){
       // Grab the caller and the thing that was called
-      var caller = toQ(toGraph(ge.getNode(EdgeDirection.FROM)))
-      var called = toQ(toGraph(ge.getNode(EdgeDirection.TO)))
+      var caller = toQ(toGraph(ge.getNode(GraphElement.EdgeDirection.FROM)))
+      var called = toQ(toGraph(ge.getNode(GraphElement.EdgeDirection.TO)))
       
       // Find out where the called thing is in our ordering
       var idx = order.indexWhere((x) => (x intersection called).eval.nodes.size > 0)
