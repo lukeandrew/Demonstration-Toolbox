@@ -48,3 +48,4 @@ Thumbs.db
 
 # PDT-specific
 .buildpath
+/.scala_dependencies
