@@ -1,5 +1,6 @@
 package com.ensoftcorp.atlas.java.demo.jee;
 
+import static com.ensoftcorp.atlas.java.core.script.Common.*;
 import static com.ensoftcorp.atlas.java.core.script.Common.index;
 import static com.ensoftcorp.atlas.java.core.script.Common.toQ;
 
@@ -14,6 +15,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.regex.Pattern;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -30,6 +32,8 @@ import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
 import com.ensoftcorp.atlas.java.core.db.graph.GraphElement;
+import com.ensoftcorp.atlas.java.core.db.set.AtlasHashSet;
+import com.ensoftcorp.atlas.java.core.db.set.AtlasSet;
 import com.ensoftcorp.atlas.java.core.db.view.View;
 import com.ensoftcorp.atlas.java.core.index.common.SourceCorrespondence;
 import com.ensoftcorp.atlas.java.core.index.common.WorkspaceResourceNotFoundException;
@@ -43,6 +47,96 @@ import com.ensoftcorp.atlas.java.core.script.UniverseManipulator.Manipulation;
 public class JEEUtils {
 	public static final String FILE = "FILE";
 	public static final String NON_JAVA_STRING_REFERENCE = "NON_JAVA_STRING_REFERENCE";
+	
+	public static Q getRawStringReferences(Q referenced, String matchPrefix, String matchSuffix, String notMatchRegex, String... fileExtensions){
+		Q containingProjects;
+		if(referenced == null) containingProjects = universe().nodesTaggedWithAny(Node.PROJECT);
+		else containingProjects = edges(Edge.DECLARES).reverse(referenced).nodesTaggedWithAny(Node.PROJECT);
+		
+		List<File> files = new LinkedList<File>();
+		for(GraphElement ge : containingProjects.eval().nodes())
+			files.addAll(projectFilesMatchingExtension((String)ge.attr().get(Node.NAME), fileExtensions));
+		
+		notMatchRegex = notMatchRegex == null ? "a^":notMatchRegex;
+		matchPrefix = matchPrefix != null && !matchPrefix.isEmpty() ? "(.*)" + matchPrefix : "";
+		matchSuffix = matchSuffix != null && !matchSuffix.isEmpty() ? matchSuffix + "(.*)" : "";
+				
+		View v = new View();
+		UniverseManipulator um = new UniverseManipulator();
+		GraphElement decEdge = index().edgesTaggedWithAny(Edge.DECLARES).eval().edges().getFirst();
+		
+		// For each file
+		for(final File file : files){
+			// Read in the lines of the file
+			List<Line> lines = readLines(file);
+			
+			Set<Line> matchingLines = new HashSet<Line>();
+			
+			if(referenced == null){
+				String matchRegex = matchPrefix + "(.*)" + matchSuffix;
+				List<Line> matchedLines = linesMatchingRegex(lines, matchRegex, notMatchRegex);
+				matchingLines.addAll(matchedLines);
+			} else{
+				for(GraphElement ge : referenced.eval().nodes()){
+					String matchRegex = matchPrefix + "(.*)" + Pattern.quote((String)ge.attr().get(Node.NAME)) + "(.*)"+ matchSuffix;
+					
+					// Get the lines which match the regex
+					List<Line> matchedLines = linesMatchingRegex(lines, matchRegex, notMatchRegex);
+					matchingLines.addAll(matchedLines);
+				}
+			}
+				
+			// If at least one line matches the regex, add stuff to the view.
+			if(matchingLines.size() > 0){
+				final IFile iFile = fileToIFile(file);
+				
+				Set<String> tags = new HashSet<String>(){{
+					add(FILE);
+				}};
+				
+				Map<String, Object> attributes;
+				SourceCorrespondence sc = null;
+				try {
+					sc = SourceCorrespondence.fromString("0", Long.toString(file.length()), iFile);
+				} catch (WorkspaceResourceNotFoundException e) {}
+				final SourceCorrespondence sc2 = sc;
+				attributes = new HashMap<String, Object>(){{
+					put(Node.NAME, file.getName().trim());
+					put(SummaryNode.SC_RANGE, sc2);
+				}};
+				
+				Manipulation fileNode = um.createNode(tags, attributes);
+				um.addToView(fileNode, v);
+				
+				tags = new HashSet<String>(){{
+					add(NON_JAVA_STRING_REFERENCE);
+				}};
+				for(final Line line : matchingLines){
+					try {
+						sc = SourceCorrespondence.fromString(Integer.toString(line.getStartOffset()), 
+															 Integer.toString(line.getEndOffset()),
+															 iFile);
+					} catch (WorkspaceResourceNotFoundException e) {}
+					
+					final SourceCorrespondence sc3 = sc;
+					attributes = new HashMap<String, Object>(){{
+						put(Node.NAME, line.getLine().trim());
+						put(SummaryNode.SC_RANGE, sc3);
+					}};
+					
+					Manipulation lineNode = um.createNode(tags, attributes);
+					Manipulation lineDeclaration = um.createEdge(decEdge, fileNode, lineNode);
+					um.addToView(lineNode, v);
+					um.addToView(lineDeclaration, v);
+				}
+			}
+		}
+		
+
+		um.perform();
+		return toQ(v);
+		
+	}
 	
 	/**
 	 * 
@@ -183,7 +277,7 @@ public class JEEUtils {
 			String line;
 			while((line = bfr.readLine()) != null) {
 				endOffset = startOffset + line.length();
-				lines.add(new Line(line, startOffset, endOffset)); 
+				lines.add(new Line(f, line, startOffset, endOffset)); 
 				startOffset = endOffset + 1;
 			}
 
@@ -260,12 +354,20 @@ public class JEEUtils {
 	private static class Line{
 		private String line;
 		private int startOffset, endOffset;
-		public Line(String line, int startOffset, int endOffset) {
+		private int hash = 0;
+		public Line(File f, String line, int startOffset, int endOffset) {
 			super();
 			this.line = line;
 			this.startOffset = startOffset;
 			this.endOffset = endOffset;
+			this.hash = f.hashCode() + line.hashCode() + new Integer(startOffset).hashCode() + new Integer(endOffset).hashCode();
 		}
+		
+		@Override
+		public boolean equals(Object o){
+			return o != null && (o instanceof Line) && o.hashCode() == hashCode();
+		}
+		
 		public String getLine() {
 			return line;
 		}
@@ -274,6 +376,10 @@ public class JEEUtils {
 		}
 		public int getEndOffset() {
 			return endOffset;
+		}
+		@Override
+		public int hashCode(){
+			return hash;
 		}
 	}
 }

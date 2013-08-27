@@ -1,6 +1,3 @@
-com.ensoftcorp.atlas.java.demo.jee.selection.JEEConvertersListenersValidators
-com.ensoftcorp.atlas.java.demo.jee.selection.JEEEnterpriseBeans
-com.ensoftcorp.atlas.java.demo.jee.selection.JEEPersistence
-com.ensoftcorp.atlas.java.demo.jee.selection.JEERenderComponents
+com.ensoftcorp.atlas.java.demo.jee.selection.JavaEE
 com.ensoftcorp.atlas.java.demo.apicompliance.selection.MediaRecorderAPICompliance
 com.ensoftcorp.atlas.java.demo.synchronization.selection.SafeSynchronization
