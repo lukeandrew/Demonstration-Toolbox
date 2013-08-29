@@ -25,8 +25,8 @@ import com.ensoftcorp.atlas.java.core.query.Attr.Node;
 import com.ensoftcorp.atlas.java.core.query.Q;
 import com.ensoftcorp.atlas.java.core.script.Common;
 import com.ensoftcorp.atlas.java.core.script.CommonQueries;
-import com.ensoftcorp.atlas.java.core.script.StyledResult;
 import com.ensoftcorp.atlas.java.core.script.CommonQueries.TraversalDirection;
+import com.ensoftcorp.atlas.java.core.script.StyledResult;
 import com.ensoftcorp.atlas.java.demo.jee.JEEUtils;
 import com.ensoftcorp.atlas.java.ui.scripts.selections.SelectionDetailScript;
 
@@ -68,10 +68,10 @@ public class JavaEE implements SelectionDetailScript{
 		 * > All uses of converters in XHTML
 		 */
 		Q fConverter = typeSelect("javax.faces.convert", "FacesConverter");
-		Q facesConverter = selection.intersection(fConverter);
-		Q facesConverterAnnotated = edges(Edge.ANNOTATION).reverse(facesConverter);
+		Q selectedFacesConverter = selection.intersection(fConverter);
+		Q facesConverterAnnotated = edges(Edge.ANNOTATION).reverse(selectedFacesConverter);
 		Q allConverterNonJavaReferences = empty();
-		if(facesConverter.eval().nodes().size() > 0)
+		if(selectedFacesConverter.eval().nodes().size() > 0)
 			allConverterNonJavaReferences = JEEUtils.getRawStringReferences((Q)null, "(f:convert|converter)", "", null, "XHTML", "xhtml");
 
 		
@@ -81,10 +81,10 @@ public class JavaEE implements SelectionDetailScript{
 		 * > The type and its converter annotation
 		 * > References to any converter in xhtml (Atlas needs better indexing of parameterized annotations)
 		 */
-		Q converters = selection.intersection(stepFrom(edges(Edge.ANNOTATION), fConverter));
-		Q converterAnnotations = edges(Edge.ANNOTATION).betweenStep(converters, fConverter);
+		Q selectedConverters = selection.intersection(stepFrom(edges(Edge.ANNOTATION), fConverter));
+		Q converterAnnotations = edges(Edge.ANNOTATION).betweenStep(selectedConverters, fConverter);
 		Q converterNonJavaReferences = empty();
-		if(converters.eval().nodes().size() > 0)
+		if(selectedConverters.eval().nodes().size() > 0)
 			converterNonJavaReferences = JEEUtils.getRawStringReferences((Q)null, "(f:convert|converter)", "", "(.*)(BigDecimal|BigInteger|Boolean|Byte|Character|DateTime|Double|Float|Integer|Long|Number|Short)(.*)", "XHTML", "xhtml");
 		
 		/*
@@ -94,10 +94,10 @@ public class JavaEE implements SelectionDetailScript{
 		 * > All references to value change listeners in the app
 		 */
 		Q actionListener = typeSelect("javax.faces.event","ActionListener");
-		Q actionListeners = selection.intersection(actionListener);
-		Q allActionListeners = edges(Edge.SUPERTYPE).reverse(actionListeners);
+		Q selectedActionListener = selection.intersection(actionListener);
+		Q allActionListeners = edges(Edge.SUPERTYPE).reverse(selectedActionListener);
 		Q allActionListenerNonJavaReferences = empty();
-		if(actionListeners.eval().nodes().size() > 0)
+		if(selectedActionListener.eval().nodes().size() > 0)
 			allActionListenerNonJavaReferences = JEEUtils.getRawStringReferences((Q)null, "actionListener", "", null, "XHTML", "xhtml");
 		
 		/*
@@ -107,10 +107,10 @@ public class JavaEE implements SelectionDetailScript{
 		 * > All references to value change listeners in the app
 		 */
 		Q valueListener = typeSelect("javax.faces.event","ValueChangeListener");
-		Q valueListeners = selection.intersection(valueListener);
-		Q allValueListeners = edges(Edge.SUPERTYPE).reverse(valueListeners);
+		Q selectedValueListener = selection.intersection(valueListener);
+		Q allValueListeners = edges(Edge.SUPERTYPE).reverse(selectedValueListener);
 		Q allValueListenerNonJavaReferences = empty();
-		if(valueListeners.eval().nodes().size() > 0)
+		if(selectedValueListener.eval().nodes().size() > 0)
 			allValueListenerNonJavaReferences =  JEEUtils.getRawStringReferences((Q)null, "valueChangeListener", "", null, "XHTML", "xhtml");
 				
 		/*
@@ -120,11 +120,12 @@ public class JavaEE implements SelectionDetailScript{
 		 * > References in xhtml to this listener 
 		 */
 		Q listenerInterfaces = actionListener.union(valueListener);
-		Q customListeners = selection.intersection(stepFrom(edges(Edge.SUPERTYPE), listenerInterfaces));
-		Q customListenerInterfaces = edges(Edge.SUPERTYPE).between(customListeners, listenerInterfaces);
+		Q allCustomListeners = stepFrom(edges(Edge.SUPERTYPE), listenerInterfaces);
+		Q selectedCustomListeners = selection.intersection(allCustomListeners);
+		Q customListenerInterfaces = edges(Edge.SUPERTYPE).between(selectedCustomListeners, listenerInterfaces);
 		Q customListenerNonJavaReferences = empty();
-		if(customListeners.eval().nodes().size() > 0)
-			customListenerNonJavaReferences = JEEUtils.getRawStringReferences(customListeners, "type", "", null, "XHTML", "xhtml");
+		if(selectedCustomListeners.eval().nodes().size() > 0)
+			customListenerNonJavaReferences = JEEUtils.getRawStringReferences(selectedCustomListeners, "type", "", null, "XHTML", "xhtml");
 		
 		
 		/*
@@ -132,10 +133,11 @@ public class JavaEE implements SelectionDetailScript{
 		 * 
 		 * > All validators and their uses
 		 */
-		Q validator = selection.intersection(typeSelect("javax.faces.validator", "Validator"));
-		Q allValidators = edges(Edge.SUPERTYPE).reverse(validator);
+		Q validator = typeSelect("javax.faces.validator", "Validator");
+		Q selectedValidator = selection.intersection(validator);
+		Q allValidators = edges(Edge.SUPERTYPE).reverse(selectedValidator);
 		Q allValidatorNonJavaReferences = empty();
-		if(validator.eval().nodes().size() > 0)
+		if(selectedValidator.eval().nodes().size() > 0)
 			allValidatorNonJavaReferences = JEEUtils.getRawStringReferences((Q)null, "(f:validate|validator)", "", null, "XHTML", "xhtml");
 		
 		/*
@@ -144,9 +146,9 @@ public class JavaEE implements SelectionDetailScript{
 		 * > The validator and its uses
 		 * 
 		 */
-		Q customValidator = selection.intersection(stepFrom(edges(Edge.SUPERTYPE), validator));
-		Q customValidatorStructure = edges(Edge.SUPERTYPE).between(customValidator, validator);
-		Q customValidatorNonJavaReferences = JEEUtils.getRawStringReferences(customValidator, "validator", "", "(.*)(validateBean|validateDoubleRange|validateLength|validateLongRange|validateRegEx|validateRequired)(.*)", "XHTML", "xhtml");
+		Q selectedCustomValidator = selection.intersection(stepFrom(edges(Edge.SUPERTYPE), validator));
+		Q customValidatorStructure = edges(Edge.SUPERTYPE).between(selectedCustomValidator, validator);
+		Q customValidatorNonJavaReferences = JEEUtils.getRawStringReferences(selectedCustomValidator, "validator", "", "(.*)(validateBean|validateDoubleRange|validateLength|validateLongRange|validateRegEx|validateRequired)(.*)", "XHTML", "xhtml");
 		
 		Q res = facesConverterAnnotated.union(
 				allConverterNonJavaReferences,
