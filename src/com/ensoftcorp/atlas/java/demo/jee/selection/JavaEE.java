@@ -67,9 +67,9 @@ public class JavaEE implements SelectionDetailScript{
 		 * > The annotation and decorated classes
 		 * > All uses of converters in XHTML
 		 */
-		Q fConverter = typeSelect("javax.faces.convert", "FacesConverter");
-		Q selectedFacesConverter = selection.intersection(fConverter);
-		Q facesConverterAnnotated = edges(Edge.ANNOTATION).reverse(selectedFacesConverter);
+		Q facesConverter = typeSelect("javax.faces.convert", "FacesConverter");
+		Q selectedFacesConverter = selection.intersection(facesConverter);
+		Q selectedFacesConverterAnnotated = edges(Edge.ANNOTATION).reverse(selectedFacesConverter);
 		Q allConverterNonJavaReferences = empty();
 		if(selectedFacesConverter.eval().nodes().size() > 0)
 			allConverterNonJavaReferences = JEEUtils.getRawStringReferences((Q)null, "(f:convert|converter)", "", null, "XHTML", "xhtml");
@@ -81,8 +81,8 @@ public class JavaEE implements SelectionDetailScript{
 		 * > The type and its converter annotation
 		 * > References to any converter in xhtml (Atlas needs better indexing of parameterized annotations)
 		 */
-		Q selectedConverters = selection.intersection(stepFrom(edges(Edge.ANNOTATION), fConverter));
-		Q converterAnnotations = edges(Edge.ANNOTATION).betweenStep(selectedConverters, fConverter);
+		Q selectedConverters = selection.intersection(stepFrom(edges(Edge.ANNOTATION), facesConverter));
+		Q selectedConverterAnnotations = edges(Edge.ANNOTATION).betweenStep(selectedConverters, facesConverter);
 		Q converterNonJavaReferences = empty();
 		if(selectedConverters.eval().nodes().size() > 0)
 			converterNonJavaReferences = JEEUtils.getRawStringReferences((Q)null, "(f:convert|converter)", "", "(.*)(BigDecimal|BigInteger|Boolean|Byte|Character|DateTime|Double|Float|Integer|Long|Number|Short)(.*)", "XHTML", "xhtml");
@@ -150,9 +150,9 @@ public class JavaEE implements SelectionDetailScript{
 		Q customValidatorStructure = edges(Edge.SUPERTYPE).between(selectedCustomValidator, validator);
 		Q customValidatorNonJavaReferences = JEEUtils.getRawStringReferences(selectedCustomValidator, "validator", "", "(.*)(validateBean|validateDoubleRange|validateLength|validateLongRange|validateRegEx|validateRequired)(.*)", "XHTML", "xhtml");
 		
-		Q res = facesConverterAnnotated.union(
+		Q res = selectedFacesConverterAnnotated.union(
 				allConverterNonJavaReferences,
-				converterAnnotations,
+				selectedConverterAnnotations,
 				converterNonJavaReferences,
 				allActionListeners,
 				allActionListenerNonJavaReferences,
@@ -180,11 +180,11 @@ public class JavaEE implements SelectionDetailScript{
 		 * > Entities that this Entity inherits from
 		 */
 		Q allEntities = stepFrom(edges(Edge.ANNOTATION), typeSelect("javax.persistence", "Entity"));
-		Q entities = selection.intersection(allEntities);
-		Q entityAnnotations = edges(Edge.ANNOTATION).forwardStep(entities);
-		Q entityConstructions = edges(Edge.DF_TYPE).betweenStep(entities,
+		Q selectedEntities = selection.intersection(allEntities);
+		Q entityAnnotations = edges(Edge.ANNOTATION).forwardStep(selectedEntities);
+		Q entityConstructions = edges(Edge.DF_TYPE).betweenStep(selectedEntities,
 				index().nodesTaggedWithAny(Node.IS_NEW));
-		Q entityInheritance = edges(Edge.SUPERTYPE).between(entities, allEntities);
+		Q entityInheritance = edges(Edge.SUPERTYPE).between(selectedEntities, allEntities);
 		
 		/*
 		 * The user may select a field of an Entity class. Fields are the database column values.
@@ -193,12 +193,12 @@ public class JavaEE implements SelectionDetailScript{
 		 * > Annotations on the fields, such as @Id (primary key)
 		 * > Places where the fields are mutated by the outside world.
 		 */
-		Q entityFields = selection.intersection(Common.fieldsOf(allEntities));
+		Q selectedEntityFields = selection.intersection(Common.fieldsOf(allEntities));
 		// Transient fields are not persisted
-		entityFields = entityFields.difference(entityFields.nodesTaggedWithAny(Node.IS_TRANSIENT), 
+		selectedEntityFields = selectedEntityFields.difference(selectedEntityFields.nodesTaggedWithAny(Node.IS_TRANSIENT), 
 				stepFrom(edges(Edge.ANNOTATION), typeSelect("javax.persistence", "Transient")));
-		Q entityFieldAnnotations = edges(Edge.ANNOTATION).forwardStep(entityFields);
-		Q entityFieldFlow = edges(Edge.DF_LOCAL, Edge.DF_INTERPROCEDURAL).reverse(entityFields); 
+		Q entityFieldAnnotations = edges(Edge.ANNOTATION).forwardStep(selectedEntityFields);
+		Q entityFieldFlow = edges(Edge.DF_LOCAL, Edge.DF_INTERPROCEDURAL).reverse(selectedEntityFields); 
 		
 		/*
 		 * The user may select a persistence annotation type. We can show:
@@ -206,9 +206,10 @@ public class JavaEE implements SelectionDetailScript{
 		 * > The annotations themselves
 		 * > Types which are annotated with these annotations
 		 */
-		Q persistenceAnnotations = selection.intersection(
-				CommonQueries.packageStructure("javax.persistence", TraversalDirection.FORWARD).nodesTaggedWithAny(Node.ANNOTATION));
-		Q persistenceAnnotated = edges(Edge.ANNOTATION).reverseStep(persistenceAnnotations);
+		Q persistenceAnnotations = CommonQueries.packageStructure("javax.persistence", TraversalDirection.FORWARD)
+				.nodesTaggedWithAny(Node.ANNOTATION);
+		Q selectedPersistenceAnnotations = selection.intersection(persistenceAnnotations);
+		Q persistenceAnnotated = edges(Edge.ANNOTATION).reverseStep(selectedPersistenceAnnotations);
 		
 		/*
 		 * The user may select a data flow node which is a reference to a PersistenceUnit. 
@@ -219,12 +220,12 @@ public class JavaEE implements SelectionDetailScript{
 		 * > Where a persistence unit is used to construct a persistence context
 		 */
 		Q allPersistenceUnits = stepFrom(edges(Edge.ANNOTATION), typeSelect("javax.persistence", "PersistenceUnit"));		
-		Q persistenceUnits = selection.intersection(allPersistenceUnits);
+		Q selectedPersistenceUnits = selection.intersection(allPersistenceUnits);
 	
 		Q createEntityManager = methodSelect("javax.persistence","EntityManagerFactory","createEntityManager");
 		Q createEMParams = edges(Edge.DECLARES).forwardStep(createEntityManager).
 				nodesTaggedWithAny(Node.PARAMETER);
-		Q persistenceContextCreation = edges(Edge.DF_LOCAL, Edge.DF_INTERPROCEDURAL).between(persistenceUnits, createEMParams); 
+		Q persistenceContextCreation = edges(Edge.DF_LOCAL, Edge.DF_INTERPROCEDURAL).between(selectedPersistenceUnits, createEMParams); 
 		
 		Q creationSiteEdges = persistenceContextCreation.selectEdge(Edge.CALL_SITE_ID);
 		Set<Address> callsites = new HashSet<Address>();
@@ -246,11 +247,11 @@ public class JavaEE implements SelectionDetailScript{
 		 * > The contexts themselves
 		 * > Where a persistence context is used to make a persistence call
 		 */
-		Q persistenceContexts = selection.intersection(
-				stepFrom(edges(Edge.ANNOTATION), typeSelect("javax.persistence", "PersistenceContext")).union(createdContexts));
+		Q persistenceContexts = stepFrom(edges(Edge.ANNOTATION), typeSelect("javax.persistence", "PersistenceContext")).union(createdContexts);
+		Q selectedPersistenceContexts = selection.intersection(persistenceContexts);
 		Q entityManagerMethods = methodsOf(typeSelect("javax.persistence","EntityManager"));
 		Q emmThis = edges(Edge.DECLARES).forwardStep(entityManagerMethods).nodesTaggedWithAny(Node.IS_THIS);
-		Q persistenceCalls = edges(Edge.DF_LOCAL, Edge.DF_INTERPROCEDURAL).between(persistenceContexts, emmThis);
+		Q persistenceCalls = edges(Edge.DF_LOCAL, Edge.DF_INTERPROCEDURAL).between(selectedPersistenceContexts, emmThis);
 		
 		/*
 		 * The user may select an object reference to a type from the persistence API.
@@ -259,9 +260,9 @@ public class JavaEE implements SelectionDetailScript{
 		 * > The type itself
 		 * > References to objects of that type
 		 */
-		Q persistenceTypes = selection.intersection(
-				CommonQueries.packageStructure("javax.persistence", TraversalDirection.FORWARD).nodesTaggedWithAny(Node.TYPE));
-		Q persistenceTypeReferences = edges(Edge.DF_TYPE).forwardStep(persistenceTypes);		
+		Q persistenceTypes = CommonQueries.packageStructure("javax.persistence", TraversalDirection.FORWARD).nodesTaggedWithAny(Node.TYPE);
+		Q selectedPersistenceTypes = selection.intersection(persistenceTypes);
+		Q persistenceTypeReferences = edges(Edge.DF_TYPE).forwardStep(selectedPersistenceTypes);		
 		
 		Q res = entityAnnotations.union(
 				entityConstructions,
@@ -269,10 +270,10 @@ public class JavaEE implements SelectionDetailScript{
 				entityFieldAnnotations,
 				entityFieldFlow,
 				persistenceAnnotated,
-				persistenceUnits,
+				selectedPersistenceUnits,
 				persistenceContextCreation,
 				createdContexts,
-				persistenceContexts,
+				selectedPersistenceContexts,
 				persistenceCalls,
 				persistenceTypeReferences);
 		
