@@ -42,26 +42,17 @@ object RaceCheck {
     
     // Everywhere a read or write to the shared token occurs
     var accessors = stepTo(rwContext, sharedTokens) union stepFrom(rwContext, sharedTokens)
+    
     // Ignore accesses by initializer blocks, since these write to fields when defining them
     accessors = accessors difference declarations(methods("<init>") union methods("<clinit>"))
+    
     var synchronizeBlocks = universe.nodesTaggedWithAny(Node.SYNCHRONIZED)
     // Special logic to ignore "CF blocks" which represent the argument of synchronization statements. Hacktacular!
     var decBySynchronized = decContext.forwardStep(synchronizeBlocks)
     accessors = accessors difference (edges(Edge.CONTROL_FLOW).reverseStep(decBySynchronized) difference decBySynchronized)
     
-    // Sort the accesses into good or bad depending on if they are under a synchronization block
-    var goodAccesses = empty
-    var badAccesses = empty
-    var ge = 0
-    for(ge <- accessors.eval.nodes){
-      var geQ = toQ(toGraph(ge))
-      var revDec = decContext.reverse(geQ)
-      if((revDec intersection synchronizeBlocks).eval.nodes.size > 0){
-        goodAccesses = goodAccesses union geQ
-      } else{
-        badAccesses = badAccesses union geQ
-      }
-    }
+    var goodAccesses = decContext.between(synchronizeBlocks, accessors) intersection accessors
+    var badAccesses = accessors difference goodAccesses
     
     // Add the edges to the shared tokens
     goodAccesses = (rwContext.forwardStep(goodAccesses) intersection rwContext.reverseStep(sharedTokens)) union 
