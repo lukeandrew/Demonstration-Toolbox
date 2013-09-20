@@ -13,12 +13,20 @@ import java.util.List;
  * To use the Demonstration Toolbox with this application,
  * 
  * 1. Import the Demonstration Toolbox project into your workspace
- * 2. Open an Atlas Interpreter view
- * 3. Index the application.
- * 4. Select the buffer
- * 5. Run 'raceCheck(selected).show'
- * 
- * See Demonstration-Toolbox/com.ensoftcorp.atlas.java.demo.synchronization.RaceCheck
+ * 2. Index the application (main menu, Atlas->Index Workspace)
+ * 3. Right click on the Demonstration Toolbox project and select Atlas->Open Atlas Smart View
+ * 4. In the Atlas Smart View toolbar, click the down arrow and select Script->Safe Synchronization
+ * 5. Click on buffer field.
+ *    The field is highlighted in yellow.
+ *    Blocks where the field is accessed under a synchronized block are blue,
+ *    unsynchronized accesses are red.
+ *    
+ * The synchronization script can be found at:
+ *   Demonstration-Toolbox/com.ensoftcorp.atlas.java.demo.synchronization.RaceCheck
+ *   
+ * The custom Atlas Smart View:
+ *   Demonstration-Toolbox/com.ensoftcorp.atlas.java.demo.synchronization.selection.SafeSynchronization
+ *   
  * 
  * @author Tom Deering
  *
