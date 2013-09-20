@@ -7,9 +7,9 @@ import com.ensoftcorp.atlas.java.core.query.Attr;
 import com.ensoftcorp.atlas.java.core.query.Q;
 import com.ensoftcorp.atlas.java.core.script.StyledResult;
 import com.ensoftcorp.atlas.java.demo.util.DisplayItem;
-import com.ensoftcorp.atlas.java.ui.scripts.selections.SelectionDetailScript;
+import com.ensoftcorp.atlas.java.ui.scripts.selections.AtlasSmartViewScript;
 
-public class MediaRecorderAPICompliance implements SelectionDetailScript{
+public class MediaRecorderAPICompliance implements AtlasSmartViewScript{
 
 	@Override
 	public String[] getSupportedNodeTags() {

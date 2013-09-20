@@ -28,7 +28,7 @@ import com.ensoftcorp.atlas.java.core.script.CommonQueries;
 import com.ensoftcorp.atlas.java.core.script.CommonQueries.TraversalDirection;
 import com.ensoftcorp.atlas.java.core.script.StyledResult;
 import com.ensoftcorp.atlas.java.demo.jee.JEEUtils;
-import com.ensoftcorp.atlas.java.ui.scripts.selections.SelectionDetailScript;
+import com.ensoftcorp.atlas.java.ui.scripts.selections.AtlasSmartViewScript;
 
 /**
  * Produces graphs relevant to JEE Faces Converters, Listeners, and Validators.
@@ -36,7 +36,7 @@ import com.ensoftcorp.atlas.java.ui.scripts.selections.SelectionDetailScript;
  * @author tom
  *
  */
-public class JavaEE implements SelectionDetailScript{
+public class JavaEE implements AtlasSmartViewScript{
 
 	@Override
 	public String[] getSupportedNodeTags() {

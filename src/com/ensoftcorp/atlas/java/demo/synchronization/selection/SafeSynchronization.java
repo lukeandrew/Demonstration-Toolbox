@@ -6,8 +6,8 @@ import com.ensoftcorp.atlas.java.core.query.Q;
 import com.ensoftcorp.atlas.java.core.script.Common;
 import com.ensoftcorp.atlas.java.core.script.StyledResult;
 import com.ensoftcorp.atlas.java.demo.util.DisplayItem;
-import com.ensoftcorp.atlas.java.ui.scripts.selections.SelectionDetailScript;
-public class SafeSynchronization implements SelectionDetailScript{
+import com.ensoftcorp.atlas.java.ui.scripts.selections.AtlasSmartViewScript;
+public class SafeSynchronization implements AtlasSmartViewScript{
 
 	@Override
 	public String[] getSupportedNodeTags() {
