@@ -206,7 +206,7 @@ public class JavaEE implements SelectionDetailScript{
 		 * > The annotations themselves
 		 * > Types which are annotated with these annotations
 		 */
-		Q persistenceAnnotations = CommonQueries.packageStructure("javax.persistence", TraversalDirection.FORWARD)
+		Q persistenceAnnotations = CommonQueries.packageDeclarations("javax.persistence")
 				.nodesTaggedWithAny(Node.ANNOTATION);
 		Q selectedPersistenceAnnotations = selection.intersection(persistenceAnnotations);
 		Q persistenceAnnotated = edges(Edge.ANNOTATION).reverseStep(selectedPersistenceAnnotations);
@@ -260,7 +260,7 @@ public class JavaEE implements SelectionDetailScript{
 		 * > The type itself
 		 * > References to objects of that type
 		 */
-		Q persistenceTypes = CommonQueries.packageStructure("javax.persistence", TraversalDirection.FORWARD).nodesTaggedWithAny(Node.TYPE);
+		Q persistenceTypes = CommonQueries.packageDeclarations("javax.persistence").nodesTaggedWithAny(Node.TYPE);
 		Q selectedPersistenceTypes = selection.intersection(persistenceTypes);
 		Q persistenceTypeReferences = edges(Edge.DF_TYPE).forwardStep(selectedPersistenceTypes);		
 		
@@ -353,8 +353,8 @@ public class JavaEE implements SelectionDetailScript{
 		 * > The annotation
 		 * > All classes annotated with this
 		 */
-		Q ejbAnnotations = CommonQueries.packageStructure("javax.ejb", TraversalDirection.FORWARD).union(
-				CommonQueries.packageStructure("javax.enterprise", TraversalDirection.FORWARD)).nodesTaggedWithAny(Node.ANNOTATION);
+		Q ejbAnnotations = CommonQueries.packageDeclarations("javax.ejb").union(
+				CommonQueries.packageDeclarations("javax.enterprise")).nodesTaggedWithAny(Node.ANNOTATION);
 		Q selectedAnnotations = selection.intersection(ejbAnnotations);
 		Q annotatedWithSelected = edges(Edge.ANNOTATION).reverseStep(selectedAnnotations);
 		
