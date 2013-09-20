@@ -27,7 +27,7 @@ import com.ensoftcorp.atlas.java.demo.util.Artist.PaintMode
 import com.ensoftcorp.atlas.java.demo.util.ScriptUtils._
 
 /**
- * Demonstration J-Atlas scripts to help look for safe, synchronized access of objects
+ * Demonstration Atlas scripts to help look for safe, synchronized access of objects
  */
 object RaceCheck {  
   

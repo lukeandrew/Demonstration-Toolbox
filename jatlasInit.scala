@@ -1,5 +1,5 @@
 /*
- * This is an initialization file for the J-Atlas Interpreter view.  Each time an Interpreter linked
+ * This is an initialization file for the Atlas Interpreter view.  Each time an Interpreter linked
  * with this project is opened or restarted, the code in this file will be run as scala code.  Below
  * is included the default initialization code for the interpreter.  As long as this file exists only
  * the code in this file will be run on interpreter startup; this default code will not be run if you

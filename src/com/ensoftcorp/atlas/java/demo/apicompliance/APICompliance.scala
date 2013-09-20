@@ -17,7 +17,7 @@ import com.ensoftcorp.atlas.java.demo.util.ScriptUtils._
 import com.ensoftcorp.atlas.java.core.db.graph.GraphElement
 
 /**
- * Demonstration J-Atlas scripts to detect problems of API usage
+ * Demonstration Atlas scripts to detect problems of API usage
  */
 object APICompliance {  
   
