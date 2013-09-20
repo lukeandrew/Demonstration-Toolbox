@@ -23,7 +23,7 @@ import java.util.List;
  * @author Tom Deering
  *
  */
-public class ProducerConsumer extends Activity {
+public class ProducerConsumerUnsafe extends Activity {
 	static List<Integer> buffer = new LinkedList<Integer>();
 	static Boolean productionDone = false;
 	

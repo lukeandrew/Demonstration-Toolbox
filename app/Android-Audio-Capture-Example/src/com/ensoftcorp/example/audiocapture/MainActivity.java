@@ -30,7 +30,12 @@ public class MainActivity extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
-		
+
+		initWrong();
+		initCorrect();
+	}
+	
+	private void initWrong() {
 		MediaRecorder mr = new MediaRecorder();
 		
 		mr.setAudioSource(MediaRecorder.AudioSource.MIC);
@@ -44,4 +49,22 @@ public class MainActivity extends Activity {
 		mr.stop();
 		mr.release();
 	}
+	
+	private void initCorrect() {
+		MediaRecorder mr = new MediaRecorder();
+		
+		mr.setAudioSource(MediaRecorder.AudioSource.MIC);
+		mr.setOutputFormat(MediaRecorder.OutputFormat.MPEG_4);
+		mr.setOutputFile("some/file");
+		mr.setAudioEncoder(MediaRecorder.AudioEncoder.AAC);
+		try {
+			mr.prepare();
+		} catch (Exception e) {}
+		mr.start();
+		mr.stop();
+		mr.release();
+		
+	}
+	
+	
 }
