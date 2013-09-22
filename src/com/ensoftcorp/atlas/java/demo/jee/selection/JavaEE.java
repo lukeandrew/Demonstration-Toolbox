@@ -288,7 +288,7 @@ public class JavaEE implements AtlasSmartViewScript{
 		 * > All classes annotated with this
 		 */
 		Q annotations = typeSelect("javax.faces.render","FacesRenderer").union(
-				typeSelect("javax.faces.render","FacesComponent"));
+				typeSelect("javax.faces.component","FacesComponent"));
 		Q selectedAnnotations = selection.intersection(annotations);
 		Q selectedClassesforAnnotations = edges(Edge.ANNOTATION).reverseStep(selectedAnnotations);
 		
